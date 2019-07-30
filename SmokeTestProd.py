@@ -27,7 +27,7 @@ Coverage (All of the tests are perfromed on both WSS and TRS where applicable):
 class Searching(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
 
     def tearDown(self):
         self.driver.close()
@@ -39,6 +39,7 @@ class Searching(unittest.TestCase):
         driver.get("https://www.webstaurantstore.com")
         driver.maximize_window()
         for term in terms:
+            print("Searching for " + term + " on WSS...")
             inputElement = driver.find_element_by_name("searchval")
             inputElement.clear()
             inputElement.send_keys(term)
@@ -56,9 +57,10 @@ class Searching(unittest.TestCase):
     def test_top_10_searches_trs(self):
         terms = ['napkins', 'freezer', 'plates', 'cutting board', 'plastic cups', 'ice maker', 'ice machine', 'refrigerator', 'stainless steel table', 'gloves']
         driver = self.driver
-        driver.get("https://www.therestaurantstore.com/stores/set/1")
+        driver.get("https://test.therestaurantstore.com/stores/set/1")
         driver.maximize_window()
         for term in terms:
+            print("Searching for " + term + " on TRS...")
             inputElement = driver.find_element_by_name("search_values")
             inputElement.clear()
             inputElement.send_keys(term)
@@ -85,6 +87,7 @@ class Searching(unittest.TestCase):
                 proceed = 1
 
         for term in terms:
+            print("Searching for " + term + " on Food Service Resources...")
             inputElement = driver.find_element_by_id("term")
             inputElement.clear()
             inputElement.send_keys(term)
@@ -105,7 +108,7 @@ class Searching(unittest.TestCase):
 #Testing functionality of various elements on Category pages
 class Categories(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
 
     def tearDown(self):
         self.driver.close()
@@ -125,6 +128,7 @@ class Categories(unittest.TestCase):
 
         driver = self.driver
         for page in pages:
+            print("Checking category page: " + page)
             driver.get(page)
             # All I'm checking is that items and filters appear on the page.
             for _ in range(2):
@@ -149,6 +153,7 @@ class Categories(unittest.TestCase):
 
         driver = self.driver
         for page in pages:
+            print("Checking category page: " + page)
             driver.get(page)
             if ("Before we continue, let's get your store location!" in driver.page_source):
                 inputElement = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[2]/div[2]/div[1]/a[2]')
@@ -159,12 +164,13 @@ class Categories(unittest.TestCase):
 
 class AutoSuggest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
 
     def tearDown(self):
         self.driver.close()
 
     def test_auto_suggest_exists_wss(self):
+        print("Checking Auto Suggest is functional...")
         search_param = "ham"
         driver = self.driver
         driver.get("https://www.webstaurantstore.com/")
@@ -174,9 +180,10 @@ class AutoSuggest(unittest.TestCase):
         driver.implicitly_wait(20)
         self.assertIn ("hamburger press", driver.find_element_by_xpath('//*[@id="searchForm"]/div/ul/li[2]/span[2]').text)
         self.assertIn ("Hamburger Presses", driver.find_element_by_xpath('//*[@id="searchForm"]/div/ul/li[12]/span[2]').text)
-        self.assertIn ('Hammermill', driver.find_element_by_xpath('//*[@id="searchForm"]/div/ul/li[20]/span[2]').text)
+        self.assertIn ('Arm & Hammer', driver.find_element_by_xpath('//*[@id="searchForm"]/div/ul/li[20]/span[2]').text)
 
     def test_auto_suggest_links(self):
+        print("Checking Auto Suggest links work...")
         search_param = "ham"
         driver = self.driver
         driver.get("https://www.webstaurantstore.com/")
@@ -190,7 +197,7 @@ class AutoSuggest(unittest.TestCase):
 
 class TRSProductPage(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
 
     def tearDown(self):
         self.driver.close()
@@ -204,6 +211,7 @@ class TRSProductPage(unittest.TestCase):
 
         driver = self.driver
         for page in pages:
+            print("Checking TRS Product Page: " + page)
             driver.get(page)
             if ("Before we continue, let's get your store location!" in driver.page_source):
                 inputElement = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div[2]/div[2]/div[1]/a[2]')
@@ -214,12 +222,14 @@ class TRSProductPage(unittest.TestCase):
 
 class Specials(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
+        print("Checking specials.cfm...")
 
     def tearDown(self):
         self.driver.close()
 
     def test_specials_loads(self):
+        
         driver = self.driver
         driver.get('https://www.webstaurantstore.com/specials.html?forcecacheupdate=1')
         self.assertIn("productBox1", driver.page_source)
@@ -236,7 +246,8 @@ class Specials(unittest.TestCase):
 
 class GroupSpecials(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
+        
 
     def tearDown(self):
         self.driver.close()
@@ -248,6 +259,7 @@ class GroupSpecials(unittest.TestCase):
 
         driver = self.driver
         for page in pages:
+            print("Checking Group Specials page: " + page)
             driver.get(page)
             self.assertIn("productBox1", driver.page_source)
             self.assertIn('class="filter-list box"', driver.page_source)
@@ -259,6 +271,7 @@ class GroupSpecials(unittest.TestCase):
 
         driver = self.driver
         for page in pages:
+            print("Checking Group Specials page: " + page)
             driver.get(page)
             for _ in range(2):
                 self.assertIn("productBox1", driver.page_source)
@@ -268,7 +281,8 @@ class GroupSpecials(unittest.TestCase):
 
 class SpecializedPages(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
+       
 
     def tearDown(self):
         self.driver.close()
@@ -280,6 +294,7 @@ class SpecializedPages(unittest.TestCase):
 
         driver = self.driver
         for page in pages:
+            print("Checking Specialized Page: " + page)
             driver.get(page)
             self.assertIn("productBox1", driver.page_source)
             self.assertIn('class="filter-list box"', driver.page_source)
@@ -291,6 +306,7 @@ class SpecializedPages(unittest.TestCase):
 
         driver = self.driver
         for page in pages:
+            print("Checking Specialized Page: " + page)
             driver.get(page)
             for _ in range(2):
                 self.assertIn("productBox1", driver.page_source)
@@ -300,7 +316,8 @@ class SpecializedPages(unittest.TestCase):
 
 class PLPSorting(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
+        print("Checking PLP sorting...")
 
     def tearDown(self):
         self.driver.close()
@@ -310,17 +327,18 @@ class PLPSorting(unittest.TestCase):
         driver = self.driver
         driver.get("https://www.webstaurantstore.com")
         driver.maximize_window()
+        
         for term in terms:
             inputElement = driver.find_element_by_name("searchval")
             inputElement.clear()
             inputElement.send_keys(term)
             inputElement.submit()
-            inputElement = driver.find_element_by_xpath('//*[@id="sort_options"]/optgroup[1]/option[2]')
-            inputElement.click()
-            self.assertEqual('https://www.webstaurantstore.com/search/napkins.html?order=price_desc', driver.current_url)
             inputElement = driver.find_element_by_xpath('//*[@id="sort_options"]/optgroup[1]/option[1]')
             inputElement.click()
             self.assertEqual('https://www.webstaurantstore.com/search/napkins.html?order=price_asc', driver.current_url)
+            inputElement = driver.find_element_by_xpath('//*[@id="sort_options"]/optgroup[1]/option[2]')
+            inputElement.click()
+            self.assertEqual('https://www.webstaurantstore.com/search/napkins.html?order=price_desc', driver.current_url)
             inputElement = driver.find_element_by_xpath('//*[@id="sort_options"]/optgroup[2]/option[1]')
             inputElement.click()
             self.assertEqual('https://www.webstaurantstore.com/search/napkins.html?order=rating_asc', driver.current_url)
@@ -439,7 +457,8 @@ class PLPSorting(unittest.TestCase):
        
 class SearchWithin(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
+        print("Checking Search Within...")
 
     def tearDown(self):
         self.driver.close()
@@ -449,6 +468,7 @@ class SearchWithin(unittest.TestCase):
         driver = self.driver
         driver.get("https://www.webstaurantstore.com")
         driver.maximize_window()
+        
         for term in terms:
             inputElement = driver.find_element_by_name("searchval")
             inputElement.clear()
@@ -494,7 +514,8 @@ class SearchWithin(unittest.TestCase):
 
 class Filters(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome()
+        print("Checking filters...")
 
     def tearDown(self):
         self.driver.close()
@@ -575,7 +596,7 @@ class Filters(unittest.TestCase):
         inputElement = driver.find_element_by_xpath('//*[@id="collapsePrice"]/a[2]/label/label/div')
         inputElement.click()
 
-        #self.assertEqual('https://www.webstaurantstore.com/specials.html?price=100,200', driver.current_url)
+        self.assertEqual('https://www.webstaurantstore.com/specials.html?price=100,200', driver.current_url)
         self.assertIn("productBox1", driver.page_source)
 
 
